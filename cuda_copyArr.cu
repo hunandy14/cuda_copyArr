@@ -63,11 +63,10 @@ void testCuda(size_t size) {
 
     // 測試
     bool f=0;
-    for(size_t i = 0; i < size; i++) {
+
+#pragma omp parallel for
+    for(int i = 0; i < size; i++) {
         if(c[i] != b[i]) {f=1;}
-        cout << a[i] << "| ";
-        cout << c[i] << ", ";
-        cout << b[i] << endl;
     }
 
     // 測試報告
@@ -78,9 +77,14 @@ void testCuda(size_t size) {
     }
 }
 
-int main(){
+int main(int argc, char const *argv[]){
+    int count = 10;
+    if (argc == 2)
+        count = atoi(argv[1]);
+
     Timer T; 
-    testCuda(10);
+    cout << "runCount = " << count << endl;
+    testCuda(count);
     T.print("ALL time.");
 
     system("pause");
